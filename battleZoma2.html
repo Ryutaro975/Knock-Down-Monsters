@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html onclick="playSong()">
+	<head>
+		<title>Knock Down Monsters</title>
+
+		<style>
+
+			body {
+
+				background-color: black;
+			}
+
+			#scene {
+
+				position: relative;
+				background-image: url("choose_castle4.png");
+				width: 1000px;
+				height: 563px;
+				display: table;
+				margin: 0 auto;i
+				overflow: hidden;
+			}
+		
+			#hero {
+
+				position: absolute;
+				left: 60px;
+				top: 170px;
+			}
+
+			#hero2, #hero3 {
+
+				position: absolute;
+				left: 600px;
+				top: 170px;	
+				z-index: 1;
+			}
+
+			#heroDead {
+
+				position: absolute;
+				left: 60px;
+				top: 170px;
+			}
+
+			#heroHP {
+
+				position:  absolute;
+				left: 100px;
+				top: 120px;
+				color: white;
+				font-size:  30px;
+				font-family: sans-serif; 
+			}
+
+			#Zoma {
+
+				position: absolute; 
+				left: 700px;
+				top: 150px;
+			}
+
+			#Zoma2, #Zoma3 {
+
+				position: absolute; 
+				left: 700px;
+				top: 150px;
+			}
+
+			#ZomaDead {
+				position: absolute;
+				left: 500px;
+				top: 150px;
+			}
+
+			#ZomaHP {
+
+				position:  absolute;
+				left: 800px;
+				top: 100px;
+				color: white;
+				font-size:  30px;
+				font-family: sans-serif; 
+				}
+
+			#heroWins {
+
+				position: absolute;
+				left: 60px;
+				top: 170px;
+			}
+
+			#menu {
+
+				position: absolute;
+				left: 120px;
+				top: 420px;
+				width: 700px;
+				height: 130px;
+				background-color: rgba(0,0,100,.7);
+				border: 2px solid white;
+				border-radius: 10px 10px 10px 10px;
+				color: white;
+				font-size:  22px;
+				padding-left: 40px;
+				font-family: sans-serif; 
+
+			}
+
+			#message{
+
+				position: absolute;
+				left: 400px;
+				top: 150px;
+				width: 200px;
+				height: 60px;
+				background-color: rgba(0,0,100,.7);
+				border: 2px solid white;
+				border-radius: 10px 10px 10px 10px;
+				color: white;
+				font-size:  22px;
+				font-family: sans-serif; 
+				text-align: center;
+				padding-top: 30px;
+
+			}
+
+			p, ul, li {
+
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}
+
+			li {
+
+				list-style: none;
+			}
+
+			li:hover {
+
+				text-decoration: underline;
+				cursor: pointer;
+			}
+
+		</style>
+
+	</head>
+	<body>
+
+		<div id="scene">
+			
+			<div id="heroHP">???/???</div>
+			<div id="ZomaHP">???/???</div>
+
+			<img src="hero.png" id="hero"> 
+			<img src="hero2.png" id="hero2"> 
+			<img src="hero3.png" id="hero3">
+			<img src="heroDead.png" id="heroDead">
+			<img src="HeroWins.png" id="heroWins">
+
+
+			<img src="Zoma.png" id="Zoma">
+			<img src="Zoma2.png" id="Zoma2">
+			<img src="Zoma3.png" id="Zoma3">
+			<img src="ZomaDead.png" id="ZomaDead">
+
+			<div id="message"></div>
+
+			<div id="menu">
+
+				<p>What will you do?</p>
+
+				<UL>
+					<li onclick="fight()">Fight</li>
+					<li onclick="run()">Run</li>
+				</ul>
+
+		</div>
+
+		<script>
+
+			var fighting = false;
+
+			var heroHPMax = 50;
+			var heroHP = heroHPMax;
+			var heroHPDiv = document.getElementById('heroHP');
+
+			var ZomaHPMax = 100;
+			var ZomaHP = ZomaHPMax;
+			var ZomaHPDiv = document.getElementById('ZomaHP');
+
+			var heroImg = document.getElementById('hero');
+			var hero2Img = document.getElementById('hero2');
+			var hero3Img = document.getElementById('hero3');
+			var heroDeadImg = document.getElementById('heroDead');
+			var heroWinsImg = document.getElementById('heroWins');
+
+			hero2Img.style.display = 'none';
+			hero3Img.style.display = 'none';
+			heroDeadImg.style.display = 'none';
+			heroWinsImg.style.display = 'none';
+
+			var ZomaImg = document.getElementById('Zoma');
+			var Zoma2Img = document.getElementById('Zoma2');
+			var Zoma3Img = document.getElementById('Zoma3'); 
+			var ZomaDeadImg = document.getElementById('ZomaDead'); 
+
+			Zoma2Img.style.display = 'none';
+			Zoma3Img.style.display = 'none';
+			ZomaDeadImg.style.display = 'none';
+
+			var messageDiv = document.getElementById('message');
+			var menuDiv = document.getElementById('menu')
+
+			messageDiv.style.display = 'none';
+
+			var song = new Audio('BoxCat_Games_-_05_-_Battle_Boss.mp3'); 
+			song.volume = .3;
+			var heroAttackSound = new Audio('heroAttack.mp3');
+			var ZomaAttackSound = new Audio('ZomaAttack.mp3');  
+			var runSound = new Audio('run.mp3');
+			var victorySong = new Audio('254644__klankbeeld__intro-brass-01.mp3');
+
+			var songStarted = false;
+
+			function playSong(){
+
+				if(songStarted == true){
+
+					return;
+				}
+
+				song.play();
+				songStarted = true;
+			}
+
+			function hideMenu(){
+
+				menuDiv.style.display = 'none';
+			}
+
+			function showMenu(){
+
+				if (heroHP == 0 || ZomaHP == 0) {
+
+					return;
+				}
+
+				menuDiv.style.display = ''; 
+			}
+
+			function hideMessage(){
+
+				messageDiv.style.display = 'none'
+			}
+
+
+			function updateHeroHP(){
+
+				heroHPDiv.innerHTML = heroHP+'/'+heroHPMax;
+			}
+
+			function updateZomaHP(){
+
+				ZomaHPDiv.innerHTML = ZomaHP+'/'+ZomaHPMax;
+			}
+
+			function showHero2(){
+
+				heroImg.style.display = 'none';
+				hero2Img.style.display = '';
+			}
+
+			function showHero3(){
+
+				hero2Img.style.display = 'none';
+				hero3Img.style.display = '';
+			}
+
+			function showHero(){
+
+				hero3Img.style.display = 'none';
+				heroImg.style.display = '';
+			}
+
+			function showHeroDead(){
+
+				heroImg.style.display = 'none';
+				heroDeadImg.style.display = '';
+			}
+
+			function goToLostPage(){
+
+				window.location.href ='LoseZoma2.html';
+			}
+
+			function heroLoses(){
+
+				messageDiv.innerHTML = 'You lose!';
+				messageDiv.style.display = '';
+				setTimeout(goToLostPage, 2000);
+			}
+
+			function goToWonPage(){
+
+				window.location.href = 'makefriend.html';
+			}
+
+			function heroWins(){
+
+				heroImg.style.display = 'none';
+				heroWinsImg.style.display = '';
+				messageDiv.innerHTML = 'You win!';
+				messageDiv.style.display = '';
+				song.pause();
+				victorySong.play();
+				setTimeout(goToWonPage, 10000);
+			}
+
+			function heroReturn(){
+
+				heroImg.style.left = '20px';
+				heroImg.style.opacity = 1;
+			}
+
+			function ZomaReturn(){
+
+				ZomaImg.style.left = '600px';
+				ZomaImg.style.opacity = 1;
+			}
+
+			function ZomaGetHit(){
+
+				var damage = 10 + Math.round(10 * Math.random());
+
+				if (Math.random() > .8 || heroHP < 20){
+
+					damage = damage * 2;
+				};
+
+				ZomaHP = ZomaHP - damage;
+
+				if (ZomaHP < 0){
+
+					ZomaHP = 0;
+				}
+
+				updateZomaHP();
+
+				ZomaImg.style.left = '630px';
+
+				ZomaImg.style.opacity = .5;
+
+				if(ZomaHP > 0){
+
+					setTimeout(ZomaReturn, 200);
+				}
+				else{
+
+					showZomaDead();
+					setTimeout(heroWins, 700);
+				}
+
+
+			}
+
+			function playHeroAttacSound(){
+
+				heroAttackSound.play();
+			}
+
+			function heroAttack(){
+
+				heroImg.style.left = '520px';
+				setTimeout(showHero2, 150);
+				setTimeout(playHeroAttacSound, 200);
+				setTimeout(showHero3, 250);
+				setTimeout(ZomaGetHit, 300);
+				setTimeout(showHero, 350);
+				setTimeout(heroReturn, 450);
+			}
+
+			function showZoma2(){
+
+				ZomaImg.style.display = 'none';
+				Zoma2Img.style.display = '';
+			}
+
+			function showZoma3(){
+
+				Zoma2Img.style.display = 'none';
+				Zoma3Img.style.display = '';
+			}
+
+			function showZoma(){
+
+				Zoma3Img.style.display = 'none';
+				ZomaImg.style.display = '';
+			}
+
+			function showZomaDead(){
+
+				ZomaImg.style.display = 'none';
+				ZomaDeadImg.style.display = '';
+			}
+
+			function heroGetHit(){
+
+				var damage = Math.round(30 * Math.random());
+
+				if (Math.random() <.3) {
+
+					damage = 0;
+				}
+
+				heroHP = heroHP - damage;
+
+				if(heroHP < 0){
+
+					heroHP = 0 ;
+				}
+
+				updateHeroHP();
+
+				heroImg.style.left= '0px';
+				
+				heroImg.style.opacity = .5;
+
+				if(heroHP >  0){
+
+					setTimeout(heroReturn, 200);
+				}
+				else{
+					
+					showHeroDead();
+					setTimeout(heroLoses, 700);
+
+				}
+
+			
+			}
+
+			function playZomaAttackSound(){
+
+				ZomaAttackSound.play();
+			}
+
+			function ZomaAttack(){
+
+				if (ZomaHP == 0){
+
+					return;
+				}
+
+				ZomaImg.style.left = '100px';
+				setTimeout(showZoma2, 200);
+				setTimeout(playZomaAttackSound, 300);
+				setTimeout(showZoma3, 500);
+				setTimeout(heroGetHit, 600);
+				setTimeout(showZoma, 800);
+				setTimeout(ZomaReturn, 1000);
+
+			}
+
+			function ZomaAttackFirst(){
+
+				if(fighting == true){
+
+					setTimeout(ZomaAttackFirst ,2000);
+
+					return;
+				}
+
+				if(Math,random() > .8){
+
+					hideMenu();
+					ZomaAttack();
+					setTimeout(showMenu, 1500);
+				}
+				setTimeout(ZomaAttackFirst ,2000);
+			}
+
+			function goToRanPage(){
+
+				window.location.href = 'LoseZoma2.html';
+			}
+
+			function run(){
+
+				fighting = true;
+
+				if (Math.random()>.5){
+
+					heroImg.style.display = 'none';
+
+					runSound.play();
+			 	
+			 		setTimeout(goToRanPage, 1000);
+				}
+				else{
+
+					hideMenu();
+					messageDiv.innerHTML = 'Couldn\'t run';
+					messageDiv.style.display ='';
+					setTimeout(ZomaAttack, 1000);
+					setTimeout(hideMessage, 2000);
+					setTimeout(showMenu, 2000);
+					setTimeout(stopFighting, 2000);
+				}
+
+			}
+
+			function stopFighting(){
+
+				fighting = false;
+			}
+
+			function fight(){
+
+				fighting = true;
+				hideMenu();
+				heroAttack();
+				setTimeout(ZomaAttack, 1000);
+				setTimeout(showMenu, 2000);
+				setTimeout(stopFighting, 2000);
+			}
+
+			updateHeroHP();
+			updateZomaHP();
+			setTimeout(ZomaAttackFirst, 2000)
+
+		</script>
+
+	</body>
+</html>	
+
+
+
+
+
+

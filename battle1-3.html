@@ -1,19 +1,13 @@
-
-<html>
+		<!DOCTYPE html>
+<html onclick="playSong()">
 	<head>
-		<title>Battle</title>
+		<title>Knock Down Monsters</title>
 
 		<style>
 
 			body {
 
 				background-color: black;
-			}
-
-			a {
-
-				color: white;
-				text-decoration: none;
 			}
 
 			#scene {
@@ -26,28 +20,28 @@
 				margin: 0 auto;
 			}
 		
-
 			#hero {
 
 				position: absolute;
-				left: 50px;
-				top: 250px;
+				left: 20px;
+				top: 120px;
 			}
+
 
 			#Gigantes {
 
-				position: absolute;
+				position: absolute; 
 				left: 600px;
-				top: 230px;
+				top: -40px;
 			}
 
 			#menu {
 
 				position: absolute;
 				left: 120px;
-				top: 5px;
+				top: 420px;
 				width: 700px;
-				height: 210px;
+				height: 130px;
 				background-color: rgba(0,0,100,.7);
 				border: 2px solid white;
 				border-radius: 10px 10px 10px 10px;
@@ -86,18 +80,40 @@
 
 			<div id="menu">
 
-				<p>Which is the largest country in the world?</p>
+				<p>What will you do?</p>
 
-				<ul>
-					<li><a href="tresure.html">Russia</a></li> 
-					<li><a href="death1.html">Japan</1></li>
-			 		<li><a href="death1.html">Brazil</a></li>
-			 		<li><a href="death1.html">China</a></li>
-
+				<UL>
+					<li onclick="fight()">Fight</li>
+					<li>Run</li>
 				</ul>
 
 		</div>
 
+		<script>
+
+			var heroImg =document.getElementById('hero');
+
+			var song = new Audio('v3.mp3'); 
+
+			song.volume = .5;
+
+			
+
+			function playSong(){
+
+				song.play();
+
+			}
+
+			function fight(){
+
+				heroImg.style.left = '520px';
+
+				console.log('Fight!')
+			}
+
+		</script>
 
 	</body>
 </html>	
+

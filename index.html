@@ -1,6 +1,6 @@
 
-
-<html>
+<!DOCTYPE html>
+<html onclick="playSong()">
 
 
 	<head>
@@ -74,9 +74,19 @@
 
  		</style>
 
+ 		<script>
+
+ 			var song = new Audio('v3.mp3')
+
+ 			song. volume = .2;
 
 
+ 			function playSong(){
 
+ 				song.play();
+ 			}
+
+ 		</script>
 
 
 	</body>
